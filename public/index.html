@@ -91,6 +91,7 @@
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
+        const messageContainer = document.getElementById('messageContainer');
         const nicknameInput = document.getElementById('nickname');
         const confirmBtn = document.getElementById('confirmNickname');
 
@@ -113,12 +114,14 @@
             confirmBtn.disabled = true;
         });
 
-        socket.on('chat message', (data) => {
+        function appendMessage(data) {
             const item = document.createElement('li');
             item.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
             messages.appendChild(item);
-            messages.scrollTop = messages.scrollHeight;
-        });
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+
+        socket.on('chat message', appendMessage);
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -127,7 +130,9 @@
                 return;
             }
             if (input.value) {
-                socket.emit('chat message', { user: nickname, message: input.value });
+                const msgData = { user: nickname, message: input.value };
+                socket.emit('chat message', msgData);
+                appendMessage(msgData);
                 input.value = '';
             }
         });
