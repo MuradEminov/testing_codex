@@ -91,6 +91,7 @@
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
+        const messageContainer = document.getElementById('messageContainer');
         const nicknameInput = document.getElementById('nickname');
         const confirmBtn = document.getElementById('confirmNickname');
 
@@ -117,7 +118,7 @@
             const item = document.createElement('li');
             item.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
             messages.appendChild(item);
-            messages.scrollTop = messages.scrollHeight;
+            messageContainer.scrollTop = messageContainer.scrollHeight;
         });
 
         form.addEventListener('submit', (e) => {
