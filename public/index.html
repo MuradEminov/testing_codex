@@ -24,11 +24,6 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        #nickname {
-            padding: 10px;
-            font-size: 1rem;
-            width: 200px;
-        }
         #messageContainer {
             flex: 1;
             width: 100%;
@@ -74,8 +69,7 @@
 </head>
 <body>
     <header>
-        <input id="nickname" placeholder="Enter nickname" />
-        <button id="confirmNickname">ok</button>
+        <h2>Simple Chat</h2>
     </header>
     <div id="messageContainer">
         <ul id="messages"></ul>
@@ -91,27 +85,7 @@
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
-        const nicknameInput = document.getElementById('nickname');
-        const confirmBtn = document.getElementById('confirmNickname');
-
-        let nickname = localStorage.getItem('nickname') || '';
-        if (nickname) {
-            nicknameInput.value = nickname;
-            nicknameInput.disabled = true;
-            confirmBtn.disabled = true;
-        }
-
-        confirmBtn.addEventListener('click', () => {
-            const value = nicknameInput.value.trim();
-            if (!value) {
-                alert('Please enter a nickname');
-                return;
-            }
-            nickname = value;
-            localStorage.setItem('nickname', nickname);
-            nicknameInput.disabled = true;
-            confirmBtn.disabled = true;
-        });
+        let nickname = null;
 
         socket.on('chat message', (data) => {
             const item = document.createElement('li');
@@ -123,8 +97,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (!nickname) {
-                alert('Please confirm your nickname first');
-                return;
+                nickname = Math.floor(Math.random() * 1000000).toString();
             }
             if (input.value) {
                 socket.emit('chat message', { user: nickname, message: input.value });
