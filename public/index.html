@@ -29,21 +29,27 @@
             font-size: 1rem;
             width: 200px;
         }
+        #messageContainer {
+            flex: 1;
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            margin: 10px 0;
+            padding: 0;
+        }
         #messages {
             list-style-type: none;
             padding: 0;
             margin: 0;
-            flex: 1;
-            width: 100%;
-            max-width: 600px;
-            overflow-y: auto;
-            box-sizing: border-box;
         }
         #messages li {
-            background: rgba(255,255,255,0.8);
             margin: 5px;
             padding: 10px;
-            border-radius: 4px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         #form {
             display: flex;
@@ -71,7 +77,9 @@
         <input id="nickname" placeholder="Enter nickname" />
         <button id="confirmNickname">ok</button>
     </header>
-    <ul id="messages"></ul>
+    <div id="messageContainer">
+        <ul id="messages"></ul>
+    </div>
     <form id="form" action="">
         <input id="input" autocomplete="off" placeholder="Type a message" />
         <button>Send</button>
@@ -107,7 +115,7 @@
 
         socket.on('chat message', (data) => {
             const item = document.createElement('li');
-            item.textContent = data.user + ': ' + data.message;
+            item.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
             messages.appendChild(item);
             messages.scrollTop = messages.scrollHeight;
         });
