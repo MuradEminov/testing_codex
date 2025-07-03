@@ -69,6 +69,7 @@
 <body>
     <header>
         <input id="nickname" placeholder="Enter nickname" />
+        <button id="confirmNickname">ok</button>
     </header>
     <ul id="messages"></ul>
     <form id="form" action="">
@@ -83,15 +84,25 @@
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
         const nicknameInput = document.getElementById('nickname');
+        const confirmBtn = document.getElementById('confirmNickname');
 
         let nickname = localStorage.getItem('nickname') || '';
         if (nickname) {
             nicknameInput.value = nickname;
+            nicknameInput.disabled = true;
+            confirmBtn.disabled = true;
         }
 
-        nicknameInput.addEventListener('change', () => {
-            nickname = nicknameInput.value.trim();
+        confirmBtn.addEventListener('click', () => {
+            const value = nicknameInput.value.trim();
+            if (!value) {
+                alert('Please enter a nickname');
+                return;
+            }
+            nickname = value;
             localStorage.setItem('nickname', nickname);
+            nicknameInput.disabled = true;
+            confirmBtn.disabled = true;
         });
 
         socket.on('chat message', (data) => {
@@ -104,15 +115,11 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (!nickname) {
-                nickname = nicknameInput.value.trim();
-                if (!nickname) {
-                    alert('Please enter a nickname');
-                    return;
-                }
-                localStorage.setItem('nickname', nickname);
+                alert('Please confirm your nickname first');
+                return;
             }
             if (input.value) {
-                socket.emit("chat message", { user: nickname, message: input.value });
+                socket.emit('chat message', { user: nickname, message: input.value });
                 input.value = '';
             }
         });
