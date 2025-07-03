@@ -3,13 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Chat</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        header {
+            background: rgba(255,255,255,0.8);
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #nickname {
+            padding: 10px;
+            font-size: 1rem;
+            width: 200px;
+        }
+        #messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+            width: 100%;
+            max-width: 600px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        #messages li {
+            background: rgba(255,255,255,0.8);
+            margin: 5px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        #form {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #input {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 10px 20px;
+            background: #ff7e5f;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <input type="text" name="username" placeholder="Username" required />
-        <button type="submit">Login</button>
+    <header>
+        <input id="nickname" placeholder="Enter nickname" />
+    </header>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" placeholder="Type a message" />
+        <button>Send</button>
     </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const nicknameInput = document.getElementById('nickname');
+
+        let nickname = localStorage.getItem('nickname') || '';
+        if (nickname) {
+            nicknameInput.value = nickname;
+        }
+
+        nicknameInput.addEventListener('change', () => {
+            nickname = nicknameInput.value.trim();
+            localStorage.setItem('nickname', nickname);
+        });
+
+        socket.on('chat message', (data) => {
+            const item = document.createElement('li');
+            item.textContent = data.user + ': ' + data.message;
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!nickname) {
+                nickname = nicknameInput.value.trim();
+                if (!nickname) {
+                    alert('Please enter a nickname');
+                    return;
+                }
+                localStorage.setItem('nickname', nickname);
+            }
+            if (input.value) {
+                socket.emit("chat message", { user: nickname, message: input.value });
+                input.value = '';
+            }
+        });
+    </script>
 </body>
 </html>
