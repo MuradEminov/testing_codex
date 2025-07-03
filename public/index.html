@@ -40,6 +40,7 @@
             box-sizing: border-box;
             margin: 10px 0;
             padding: 0;
+
         }
         #messages {
             list-style-type: none;
@@ -50,6 +51,7 @@
             margin: 5px;
             padding: 10px;
             border-bottom: 1px solid rgba(0,0,0,0.1);
+
         }
         #form {
             display: flex;
@@ -91,6 +93,7 @@
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
+        const messageContainer = document.getElementById('messageContainer');
         const nicknameInput = document.getElementById('nickname');
         const confirmBtn = document.getElementById('confirmNickname');
 
@@ -117,7 +120,7 @@
             const item = document.createElement('li');
             item.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
             messages.appendChild(item);
-            messages.scrollTop = messages.scrollHeight;
+            messageContainer.scrollTop = messageContainer.scrollHeight;
         });
 
         form.addEventListener('submit', (e) => {
