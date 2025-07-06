@@ -72,6 +72,7 @@
         #emoji-panel {
             position: absolute;
             bottom: 60px;
+            left: 40px;
             background: white;
             border: 1px solid #ccc;
             padding: 5px;
@@ -134,11 +135,14 @@
         let nickname = null;
 
         const toggleEmojiPanel = () => {
-            emojiPanel.classList.toggle('hidden');
-            if (!emojiPanel.classList.contains('hidden')) {
+
+            const nowHidden = emojiPanel.classList.toggle('hidden');
+            if (!nowHidden) {
+
                 startAutoCloseTimer();
             } else {
                 clearTimeout(emojiTimer);
+                emojiTimer = null;
             }
         };
 
