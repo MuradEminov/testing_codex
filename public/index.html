@@ -72,12 +72,14 @@
         #emoji-panel {
             position: absolute;
             bottom: 60px;
+            left: 40px;
             background: white;
             border: 1px solid #ccc;
             padding: 5px;
             border-radius: 4px;
             display: flex;
             gap: 5px;
+            z-index: 10; /* ensure the panel appears above other elements */
         }
         .hidden {
             display: none;
@@ -132,15 +134,17 @@
         };
         let nickname = null;
 
-        emojiBtn.addEventListener('click', () => {
-            if (emojiPanel.classList.contains('hidden')) {
-                emojiPanel.classList.remove('hidden');
+        const toggleEmojiPanel = () => {
+            const nowHidden = emojiPanel.classList.toggle('hidden');
+            if (!nowHidden) {
                 startAutoCloseTimer();
             } else {
-                emojiPanel.classList.add('hidden');
                 clearTimeout(emojiTimer);
+                emojiTimer = null;
             }
-        });
+        };
+
+        emojiBtn.addEventListener('click', toggleEmojiPanel);
 
         emojiPanel.addEventListener('click', (e) => {
             if (e.target.classList.contains('emoji')) {
