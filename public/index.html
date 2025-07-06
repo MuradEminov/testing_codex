@@ -122,16 +122,32 @@
         const emojiBtn = document.getElementById('emoji-btn');
         const emojiPanel = document.getElementById('emoji-panel');
         let nickname = null;
+        let emojiTimeout;
+
+        function hidePanel() {
+            emojiPanel.classList.add('hidden');
+            clearTimeout(emojiTimeout);
+        }
+
+        function resetEmojiTimeout() {
+            clearTimeout(emojiTimeout);
+            emojiTimeout = setTimeout(hidePanel, 2000);
+        }
 
         emojiBtn.addEventListener('click', () => {
-            emojiPanel.classList.toggle('hidden');
+            if (emojiPanel.classList.contains('hidden')) {
+                emojiPanel.classList.remove('hidden');
+                resetEmojiTimeout();
+            } else {
+                hidePanel();
+            }
         });
 
         emojiPanel.addEventListener('click', (e) => {
             if (e.target.classList.contains('emoji')) {
                 input.value += e.target.textContent;
-                emojiPanel.classList.add('hidden');
                 input.focus();
+                resetEmojiTimeout();
             }
         });
 
