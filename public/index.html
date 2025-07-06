@@ -78,6 +78,7 @@
             border-radius: 4px;
             display: flex;
             gap: 5px;
+            z-index: 10; /* ensure the panel appears above other elements */
         }
         .hidden {
             display: none;
@@ -132,15 +133,16 @@
         };
         let nickname = null;
 
-        emojiBtn.addEventListener('click', () => {
-            if (emojiPanel.classList.contains('hidden')) {
-                emojiPanel.classList.remove('hidden');
+        const toggleEmojiPanel = () => {
+            emojiPanel.classList.toggle('hidden');
+            if (!emojiPanel.classList.contains('hidden')) {
                 startAutoCloseTimer();
             } else {
-                emojiPanel.classList.add('hidden');
                 clearTimeout(emojiTimer);
             }
-        });
+        };
+
+        emojiBtn.addEventListener('click', toggleEmojiPanel);
 
         emojiPanel.addEventListener('click', (e) => {
             if (e.target.classList.contains('emoji')) {
