@@ -52,6 +52,7 @@
             max-width: 600px;
             padding: 10px;
             box-sizing: border-box;
+            position: relative;
         }
         #input {
             flex: 1;
@@ -65,6 +66,26 @@
             color: white;
             cursor: pointer;
         }
+        #emoji-btn {
+            margin-right: 5px;
+        }
+        #emoji-panel {
+            position: absolute;
+            bottom: 60px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px;
+            display: flex;
+            gap: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .emoji {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +97,19 @@
     </div>
     <form id="form" action="">
         <input id="input" autocomplete="off" placeholder="Type a message" />
+        <button type="button" id="emoji-btn">&#128512;</button>
+        <div id="emoji-panel" class="hidden">
+            <span class="emoji">😀</span>
+            <span class="emoji">😂</span>
+            <span class="emoji">😍</span>
+            <span class="emoji">😎</span>
+            <span class="emoji">😊</span>
+            <span class="emoji">😢</span>
+            <span class="emoji">😡</span>
+            <span class="emoji">🎉</span>
+            <span class="emoji">👍</span>
+            <span class="emoji">🙏</span>
+        </div>
         <button>Send</button>
     </form>
 
@@ -85,7 +119,21 @@
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
+        const emojiBtn = document.getElementById('emoji-btn');
+        const emojiPanel = document.getElementById('emoji-panel');
         let nickname = null;
+
+        emojiBtn.addEventListener('click', () => {
+            emojiPanel.classList.toggle('hidden');
+        });
+
+        emojiPanel.addEventListener('click', (e) => {
+            if (e.target.classList.contains('emoji')) {
+                input.value += e.target.textContent;
+                emojiPanel.classList.add('hidden');
+                input.focus();
+            }
+        });
 
         socket.on('chat message', (data) => {
             const item = document.createElement('li');
