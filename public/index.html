@@ -135,8 +135,10 @@
         let nickname = null;
 
         const toggleEmojiPanel = () => {
+
             const nowHidden = emojiPanel.classList.toggle('hidden');
             if (!nowHidden) {
+
                 startAutoCloseTimer();
             } else {
                 clearTimeout(emojiTimer);
