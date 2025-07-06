@@ -121,17 +121,32 @@
         const messages = document.getElementById('messages');
         const emojiBtn = document.getElementById('emoji-btn');
         const emojiPanel = document.getElementById('emoji-panel');
+        let emojiTimer = null;
+
+        const startAutoCloseTimer = () => {
+            clearTimeout(emojiTimer);
+            emojiTimer = setTimeout(() => {
+                emojiPanel.classList.add('hidden');
+                emojiTimer = null;
+            }, 2000);
+        };
         let nickname = null;
 
         emojiBtn.addEventListener('click', () => {
-            emojiPanel.classList.toggle('hidden');
+            if (emojiPanel.classList.contains('hidden')) {
+                emojiPanel.classList.remove('hidden');
+                startAutoCloseTimer();
+            } else {
+                emojiPanel.classList.add('hidden');
+                clearTimeout(emojiTimer);
+            }
         });
 
         emojiPanel.addEventListener('click', (e) => {
             if (e.target.classList.contains('emoji')) {
                 input.value += e.target.textContent;
-                emojiPanel.classList.add('hidden');
                 input.focus();
+                startAutoCloseTimer();
             }
         });
 
